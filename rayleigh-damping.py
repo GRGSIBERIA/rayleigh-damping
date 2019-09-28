@@ -24,6 +24,18 @@ class MainWindow(QWidget):
         self.labelDampB.setText("高周波側の減衰比")
         self.editDampB = QLineEdit()
 
+        self.labelAlpha = QLabel(self)
+        self.labelAlpha.setText("α")
+        self.resultAlpha = QLabel(self)
+        self.resultAlpha.setText("0.0")
+
+        self.labelBeta = QLabel(self)
+        self.labelBeta.setText("β")
+        self.resultBeta = QLabel(self)
+        self.resultBeta.setText("0.0")
+
+        vbox = QVBoxLayout(self)
+
         grid = QGridLayout(self)
         grid.setSpacing(10)
 
@@ -31,13 +43,23 @@ class MainWindow(QWidget):
         grid.addWidget(self.labelFreqB, 2, 0)
         grid.addWidget(self.labelDampA, 3, 0)
         grid.addWidget(self.labelDampB, 4, 0)
+        grid.addWidget(self.labelAlpha, 5, 0)
+        grid.addWidget(self.labelBeta, 6, 0)
 
         grid.addWidget(self.editFreqA, 1, 1)
         grid.addWidget(self.editFreqB, 2, 1)
         grid.addWidget(self.editDampA, 3, 1)
         grid.addWidget(self.editDampB, 4, 1)
+        grid.addWidget(self.resultAlpha, 5, 1)
+        grid.addWidget(self.resultBeta, 6, 1)
 
-        self.setLayout(grid)
+        hbox = QHBoxLayout(self)
+
+
+        vbox.addLayout(grid)
+        vbox.addLayout(hbox)
+
+        self.setLayout(vbox)
         self.setGeometry(300, 50, 400, 350)
         self.setWindowTitle("Rayleigh Damping")
         
