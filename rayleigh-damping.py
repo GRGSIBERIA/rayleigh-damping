@@ -1,21 +1,20 @@
-import wx
+import sys
+from PyQt5.QtCore import *
+from PyQt5.QtWidgets import *
+import sip
+
+
+class MainWindow(QWidget):
+    def __init__(self, parent=None):
+        super(MainWindow, self).__init__(parent)
+
+        self.setGeometry(300, 50, 400, 350)
+        self.setWindowTitle("Rayleigh Damping")
+        
 
 if __name__ == "__main__":
-    app = wx.App()
-    frame = wx.Frame(None, -1, 'Reyleigh Damping',size=(500,500))
-
-    panel = wx.Panel(frame, wx.ID_ANY)
-
-    freqA = wx.TextCtrl(frame, wx.ID_ANY)
-    label_freqA = wx.StaticText(panel, wx.ID_ANY, "Low Frequency")
-
-    layout_freqA = wx.BoxSizer(wx.HORIZONTAL)
-    layout_freqA.Add(label_freqA)
-    layout_freqA.Add(freqA, flag=wx.GROW)
+    app = QApplication(sys.argv)
+    main_window = MainWindow()
+    main_window.show()
+    sys.exit(app.exec_())
     
-    #freqB = wx.TextCtrl(frame, wx.ID_ANY)
-
-    panel.SetSizer(layout_freqA)
-
-    frame.Show()
-    app.MainLoop()
