@@ -17,36 +17,56 @@ class MainWindow(QWidget):
 
         self.executeButton.clicked.connect(self.__updateGraph)
 
-        self.setGeometry(300, 50, 400, 350)
+        self.setGeometry(300, 50, 400, 600)
         self.setWindowTitle("Rayleigh Damping")
         
     def __updateGraph(self):
-        omega1 = float(self.editFreqA.text()) * 2. * np.pi
-        omega2 = float(self.editFreqB.text()) * 2. * np.pi
-        damp1 = float(self.editDampA.text())
-        damp2 = float(self.editDampB.text())
-        alpha = (2. * omega1 * omega2 * (damp1 * omega2 - damp2 * omega1)) / (omega2**2. - omega1**2.)
-        beta = (2. * (damp2 * omega2 - damp1 * omega1)) / (omega2**2. - omega1**2.)
-        self.resultAlpha.setText(str(alpha))
-        self.resultBeta.setText(str(beta))
+        try:
+            omega1 =  2. * np.pi / float(self.editFreqA.text())
+            omega2 =  2. * np.pi / float(self.editFreqB.text())
+            damp1 = float(self.editDampA.text())
+            damp2 = float(self.editDampB.text())
+            alpha = (2. * omega1 * omega2 * (damp1 * omega2 - damp2 * omega1)) / (omega2**2. - omega1**2.)
+            beta = (2. * (damp2 * omega2 - damp1 * omega1)) / (omega2**2. - omega1**2.)
+            self.resultAlpha.setText(str(alpha))
+            self.resultBeta.setText(str(beta))
+
+            x = np.linspace(0.01, omega2 * 2, 100)
+            all_damp = alpha/(2.*x) + beta * x / 2.
+            
+            self.axis.clear()
+            self.axis.plot(x, all_damp)
+            self.axis.set_ylabel("-> Damping ratio")
+            self.axis.set_xlabel("-> $\\omega$ (Angular velocity)")
+            self.axis.axvline(x=omega1, color="r", linestyle="--")
+            self.axis.axvline(x=omega2, color="r", linestyle="--")
+            self.fig.tight_layout()
+            self.canvas.draw()
+
+        except Exception as e:
+            q = QMessageBox.critical(self, "ERROR", e.__str__())
 
 
     def __initInstances(self):
         self.labelFreqA = QLabel(self)
         self.labelFreqA.setText("低周波側の周波数 [Hz]")
         self.editFreqA = QLineEdit()
+        self.editFreqA.setText("120")
 
         self.labelFreqB = QLabel(self)
         self.labelFreqB.setText("高周波側の周波数 [Hz]")
         self.editFreqB = QLineEdit()
+        self.editFreqB.setText("240")
 
         self.labelDampA = QLabel(self)
         self.labelDampA.setText("低周波側の減衰比")
         self.editDampA = QLineEdit()
+        self.editDampA.setText("0.1")
 
         self.labelDampB = QLabel(self)
         self.labelDampB.setText("高周波側の減衰比")
         self.editDampB = QLineEdit()
+        self.editDampB.setText("0.07")
 
         self.labelAlpha = QLabel(self)
         self.labelAlpha.setText("α")
@@ -58,11 +78,15 @@ class MainWindow(QWidget):
         self.resultBeta = QLabel(self)
         self.resultBeta.setText("0.0")
 
-        self.fig = plot.figure()
+        self.__createFigure()
         self.canvas = FigureCanvas(self.fig)
-        self.axis = self.fig.add_subplot(111)
 
         self.executeButton = QPushButton("計算", self)
+
+
+    def __createFigure(self):
+        self.fig = plot.figure()
+        self.axis = self.fig.add_subplot(111)
 
 
     def __initLayouts(self):
