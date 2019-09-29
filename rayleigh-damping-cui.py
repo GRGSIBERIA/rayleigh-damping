@@ -18,7 +18,7 @@ def computerayreigh(js):
     oa = 2. * np.pi / fa
     ob = 2. * np.pi / fb
     under = ob**2. - oa**2.
-    a = (2. * oa * ob (da * ob - db * oa)) / under
+    a = (2. * oa * ob * (da * ob - db * oa)) / under
     b = (2. * (db * ob - da * oa)) / under
     return (a, b)
 
@@ -34,4 +34,11 @@ if __name__ == "__main__":
     with open(confpath, "r") as f:
         js = json.load(f)
     
-    print(js)
+    print("low  freq: ", js["low freq"])
+    print("high freq: ", js["high freq"])
+    print("low  damp: ", js["low damp"])
+    print("high damp: ", js["high damp"])
+
+    alpha, beta = computerayreigh(js)
+    print("alpha : ", alpha)
+    print("beta  : ", beta)
