@@ -1,9 +1,11 @@
 import sys
 import os.path
 import wave
+import json
 import numpy as np
 from scipy import signal
 import matplotlib.pyplot as plot
+
 
 def printhelp():
     print("python damping-ratio.py [wave file]")
@@ -43,24 +45,52 @@ def readwavefile(path):
     return (np.frombuffer(buf, dtype=dtype).astype("float64"), samplingrate)
 
 
+def spectrogram(js, data):
+    frameshift = int(js["fft"]["frame shift"])
+    samples = int(js["fft"]["samples"])
+    numframes = int((len(data) - samples) / frameshift)
+
+    specs = []
+    window = np.hamming(samples)
+    for i in range(numframes):
+        idx = i * frameshift
+        windowed = window * data[idx:idx+samples]
+        spectrum = np.abs(np.fft.fft(windowed))
+        specs.append(spectrum)
+    specgram = np.array(specs)
+
+    print("frame shift      : ", frameshift)
+    print("samples          : ", samples)
+    print("number of frames : ", numframes)
+
+    return specgram
+
+
 if __name__ == "__main__":
     if len(sys.argv) != 2:
         printhelp()
 
-    wavpath = sys.argv[1]
+    configpath = sys.argv[1]
+    
+    if not os.path.exists(configpath):
+        printhelp()
+    with open(configpath, "r") as f:
+        js = json.load(f)
+
+    wavpath = js["wav"]
     if not os.path.exists(wavpath):
         printhelp()
     
     data, samplerate = readwavefile(wavpath)
     deltatime = 1. / samplerate
-    x = np.arange(0, len(data) * deltatime, deltatime)[:-1]
+    totaltimes = deltatime * len(data)
 
-    envelope = np.imag(signal.hilbert(data, 1024))
-    plot.plot(envelope)
+    specgram = spectrogram(js, data)
 
-    for _ in range(5):
-        envelope = np.imag(signal.hilbert(envelope))
-    plot.plot(envelope)
-
+    plot.imshow(specgram.T, extent=[0, totaltimes, 0, samplerate], aspect="auto")
+    plot.xlabel("-> times")
+    plot.ylabel("-> frequency [Hz]")
+    plot.colorbar()
+    plot.tight_layout()
     plot.show()
     
