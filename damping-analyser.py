@@ -2,6 +2,7 @@ import sys
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 import numpy as np
+import matplotlib
 import matplotlib.pyplot as plot
 matplotlib.use("Qt5Agg")
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
@@ -14,14 +15,24 @@ class SpectrogramWidget(QWidget):
         self.__initLayout()
 
 
+    def __initFigure(self):
+        self.spectrum.set_title("Spectrum")
+        self.waveform.set_title("Waveform")
+        self.fig.tight_layout()
+
+
     def __initInstances(self):
         self.fig = plot.figure()
-        self.axis = self.fig.add_subplot(111)
+        self.spectrum = self.fig.add_subplot(212)
+        self.waveform = self.fig.add_subplot(211)
         self.canvas = FigureCanvas(self.fig)
+        self.__initFigure()
 
 
     def __initLayout(self):
-        self.layout.addWidget(self.canvas)
+        vbox = QVBoxLayout(self)
+        vbox.addWidget(self.canvas)
+        self.setLayout(vbox)
 
 
 class TabAnalyseSpectrum(QWidget):
@@ -37,25 +48,32 @@ class TabAnalyseSpectrum(QWidget):
         self.wavfileDialog = QPushButton("...", self)
         self.executeButton = QPushButton("Show Spectrogram", self)
         self.canvas = SpectrogramWidget(self)
+        self.table = QTableWidget(self)
     
 
     def __initLayout(self):
-        baselayout = QVBoxLayout(self)
+        baselayout = QHBoxLayout(self)
+        self.setLayout(baselayout)
+        
+        vbox = QVBoxLayout(self)
 
         hbox = QHBoxLayout(self)
         hbox.addWidget(self.wavfileLabel)
         hbox.addWidget(self.wavfileEdit)
         hbox.addWidget(self.wavfileDialog)
-        baselayout.addLayout(hbox)
+        vbox.addLayout(hbox)
 
         hbox = QHBoxLayout(self)
         hbox.addWidget(self.executeButton, alignment=(Qt.AlignRight))
-        baselayout.addLayout(hbox)
+        vbox.addLayout(hbox)
 
-        baselayout.addWidget(self.canvas)
+        vbox.addWidget(self.table)
+        baselayout.addLayout(vbox)
+        
+        vbox = QVBoxLayout(self)
+        vbox.addWidget(self.canvas)
 
-
-        self.setLayout(baselayout)
+        baselayout.addLayout(vbox)
 
 
 class TabAnalyseDamping(QWidget):
@@ -71,7 +89,7 @@ class MainWindow(QWidget):
         self.__initLayout()
         self.__initEvent()
 
-        self.setGeometry(300, 50, 400, 600)
+        self.setGeometry(300, 50, 600, 600)
         self.setWindowTitle("Damping Analyser")
 
 
