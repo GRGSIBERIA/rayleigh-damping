@@ -2,6 +2,26 @@ import sys
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 import numpy as np
+import matplotlib.pyplot as plot
+matplotlib.use("Qt5Agg")
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+
+
+class SpectrogramWidget(QWidget):
+    def __init__(self, parent=None):
+        super(SpectrogramWidget, self).__init__(parent)
+        self.__initInstances()
+        self.__initLayout()
+
+
+    def __initInstances(self):
+        self.fig = plot.figure()
+        self.axis = self.fig.add_subplot(111)
+        self.canvas = FigureCanvas(self.fig)
+
+
+    def __initLayout(self):
+        self.layout.addWidget(self.canvas)
 
 
 class TabAnalyseSpectrum(QWidget):
@@ -16,6 +36,7 @@ class TabAnalyseSpectrum(QWidget):
         self.wavfileEdit = QLineEdit("", self)
         self.wavfileDialog = QPushButton("...", self)
         self.executeButton = QPushButton("Show Spectrogram", self)
+        self.canvas = SpectrogramWidget(self)
     
 
     def __initLayout(self):
@@ -27,7 +48,12 @@ class TabAnalyseSpectrum(QWidget):
         hbox.addWidget(self.wavfileDialog)
         baselayout.addLayout(hbox)
 
-        
+        hbox = QHBoxLayout(self)
+        hbox.addWidget(self.executeButton, alignment=(Qt.AlignRight))
+        baselayout.addLayout(hbox)
+
+        baselayout.addWidget(self.canvas)
+
 
         self.setLayout(baselayout)
 
