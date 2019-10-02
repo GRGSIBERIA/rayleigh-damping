@@ -22,7 +22,7 @@ class SpectrogramWidget(QWidget):
 
 
     def __initInstances(self):
-        self.fig = plot.figure()
+        self.fig = plot.figure(figsize=(4,3))
         self.spectrum = self.fig.add_subplot(212)
         self.waveform = self.fig.add_subplot(211)
         self.canvas = FigureCanvas(self.fig)
@@ -31,7 +31,10 @@ class SpectrogramWidget(QWidget):
 
     def __initLayout(self):
         vbox = QVBoxLayout(self)
+
         vbox.addWidget(self.canvas)
+        self.canvas.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Expanding)
+
         self.setLayout(vbox)
 
 
@@ -55,25 +58,25 @@ class TabAnalyseSpectrum(QWidget):
         baselayout = QHBoxLayout(self)
         self.setLayout(baselayout)
         
-        vbox = QVBoxLayout(self)
+        tabularFormLayout = QVBoxLayout(self)
 
-        hbox = QHBoxLayout(self)
-        hbox.addWidget(self.wavfileLabel)
-        hbox.addWidget(self.wavfileEdit)
-        hbox.addWidget(self.wavfileDialog)
-        vbox.addLayout(hbox)
+        wavfieldLayout = QHBoxLayout(self)
+        wavfieldLayout.addWidget(self.wavfileLabel)
+        wavfieldLayout.addWidget(self.wavfileEdit)
+        wavfieldLayout.addWidget(self.wavfileDialog)
+        tabularFormLayout.addLayout(wavfieldLayout)
 
-        hbox = QHBoxLayout(self)
-        hbox.addWidget(self.executeButton, alignment=(Qt.AlignRight))
-        vbox.addLayout(hbox)
+        executeLayout = QHBoxLayout(self)
+        executeLayout.addWidget(self.executeButton, alignment=(Qt.AlignRight))
+        tabularFormLayout.addLayout(executeLayout)
 
-        vbox.addWidget(self.table)
-        baselayout.addLayout(vbox)
+        tabularFormLayout.addWidget(self.table)
+        baselayout.addLayout(tabularFormLayout)
         
-        vbox = QVBoxLayout(self)
-        vbox.addWidget(self.canvas)
+        canvasLayout = QVBoxLayout(self)
+        canvasLayout.addWidget(self.canvas)
 
-        baselayout.addLayout(vbox)
+        baselayout.addLayout(canvasLayout)
 
 
 class TabAnalyseDamping(QWidget):
@@ -89,7 +92,7 @@ class MainWindow(QWidget):
         self.__initLayout()
         self.__initEvent()
 
-        self.setGeometry(300, 50, 600, 600)
+        self.setGeometry(300, 50, 1024, 768)
         self.setWindowTitle("Damping Analyser")
 
 
