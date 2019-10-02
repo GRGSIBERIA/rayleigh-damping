@@ -2,7 +2,7 @@
     "low freq": 281.25,
     "high freq": 796.875,
     "low damp": 0.034095769,
-    "high damp": 0.001160616,
+    "high damp": 0.157958087,
     "wav": "./example.wav",
     "fft": {
         "frame shift": 50,
