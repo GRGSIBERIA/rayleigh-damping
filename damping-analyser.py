@@ -49,6 +49,10 @@ class TabAnalyseSpectrum(QWidget):
         self.wavfileLabel = QLabel("WAV File", self)
         self.wavfileEdit = QLineEdit("", self)
         self.wavfileDialog = QPushButton("...", self)
+        self.fftSampleLabel = QLabel("FFT Sample Size", self)
+        self.fftSampleEdit = QLineEdit("1024", self)
+        self.frameShiftLabel = QLabel("FFT Frame Shift", self)
+        self.frameShiftEdit = QLineEdit("50", self)
         self.executeButton = QPushButton("Show Spectrogram", self)
         self.canvas = SpectrogramWidget(self)
         self.table = QTableWidget(self)
@@ -59,6 +63,13 @@ class TabAnalyseSpectrum(QWidget):
         self.setLayout(baselayout)
         
         tabularFormLayout = QVBoxLayout(self)
+
+        fftGridLayout = QGridLayout(self)
+        fftGridLayout.addWidget(self.fftSampleLabel, 0, 0)
+        fftGridLayout.addWidget(self.fftSampleEdit, 0, 1)
+        fftGridLayout.addWidget(self.frameShiftLabel, 1, 0)
+        fftGridLayout.addWidget(self.frameShiftEdit, 1, 1)
+        tabularFormLayout.addLayout(fftGridLayout)
 
         wavfieldLayout = QHBoxLayout(self)
         wavfieldLayout.addWidget(self.wavfileLabel)
