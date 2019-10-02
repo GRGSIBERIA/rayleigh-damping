@@ -6,7 +6,10 @@ class NotSupportSampleWidthError(Exception):
 
 
 class WaveData:
-    def __init__(self, path):
+    def __init__(self, path: str, fftSample: int, frameShift: int):
+        self.fftSample = fftSample
+        self.frameShift = frameShift
+
         with wave.open(path, "rb") as wav:
             self.samplingRate = wav.getframerate()
             self.frames = wav.getnframes()
@@ -24,3 +27,5 @@ class WaveData:
         self.deltaTime = 1. / self.lamplingRate
         self.totalTime = self.frames * self.deltaTime
         self.data = np.frombuffer(buf, dtype=dtype).astype("float64")
+
+        
