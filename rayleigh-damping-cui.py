@@ -12,14 +12,14 @@ def printhelp():
 def computerayreigh(js):
     fa = float(js["low freq"])
     fb = float(js["high freq"])
-    da = float(js["low damp"])
-    db = float(js["high damp"])
+    zetaA = float(js["low zetaAmp"])
+    zetaB = float(js["high damp"])
 
     oa = 2. * np.pi / fa
     ob = 2. * np.pi / fb
-    under = ob**2. - oa**2.
-    a = (2. * oa * ob * (da * ob - db * oa)) / under
-    b = (2. * (db * ob - da * oa)) / under
+    under = oa**2. - ob**2.
+    a = (2 * oa * ob * (oa * zetaB - ob * zetaA)) / under
+    b = (2. * (oa * zetaA - ob * zetaB)) / under
     return (a, b)
 
 
