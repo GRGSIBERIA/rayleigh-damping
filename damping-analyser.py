@@ -116,6 +116,10 @@ class TabAnalyseSpectrum(QWidget):
             self.table.setRowCount(len(self.wav.vLabels))       # 行数
             self.table.setHorizontalHeaderLabels(self.wav.hLabels)
             self.table.setVerticalHeaderLabels(self.wav.vLabels)
+
+            for timeid, times in enumerate(self.wav.spectrogram):
+                for ampid, amp in enumerate(times):
+                    self.table.setItem(timeid, ampid, QTableWidgetItem(str(amp)))
         else:
             QMessageBox.critical(self, "ERROR", "Not valid a wav file")
 
