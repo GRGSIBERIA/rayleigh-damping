@@ -1,4 +1,5 @@
 import sys
+import os.path
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 import numpy as np
@@ -6,7 +7,7 @@ import matplotlib
 import matplotlib.pyplot as plot
 matplotlib.use("Qt5Agg")
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
-
+from src.wavereader import WaveData
 
 class SpectrogramWidget(QWidget):
     def __init__(self, parent=None):
@@ -18,6 +19,10 @@ class SpectrogramWidget(QWidget):
     def __initFigure(self):
         self.spectrum.set_title("Spectrum")
         self.waveform.set_title("Waveform")
+        self.spectrum.set_xlabel("-> Frequency [Hz]")
+        self.waveform.set_xlabel("-> Time [sec]")
+        self.spectrum.set_ylabel("-> Relative Amplitude")
+        self.waveform.set_ylabel("-> Relative Amplitude")
         self.fig.tight_layout()
 
 
@@ -43,6 +48,7 @@ class TabAnalyseSpectrum(QWidget):
         super(TabAnalyseSpectrum, self).__init__(parent)
         self.__initInstances()
         self.__initLayout()
+        self.__initEvent()
 
     
     def __initInstances(self):
@@ -88,6 +94,35 @@ class TabAnalyseSpectrum(QWidget):
         canvasLayout.addWidget(self.canvas)
 
         baselayout.addLayout(canvasLayout)
+
+
+    def __showFileDialog(self):
+        fname = QFileDialog.getOpenFileName(self, "Open WAV File", "./", "WAV(*.wav)")
+
+        if len(fname) > 0:
+            self.wavfileEdit.setText(fname[0])
+        else:
+            QMessageBox.critical(self, "ERROR", "Can't select a wev file")
+
+
+    def __importWavIntoTable(self):
+        fftSample = int(self.fftSampleEdit.text())
+        frameShift = int(self.frameShiftEdit.text())
+        path = self.wavfileEdit.text()
+
+        if os.path.exists(path):
+            self.wav = WaveData(path, fftSample, frameShift)
+            self.table.setColumnCount(len(self.wav.hLabels))    # 列数
+            self.table.setRowCount(len(self.wav.vLabels))       # 行数
+            self.table.setHorizontalHeaderLabels(self.wav.hLabels)
+            self.table.setVerticalHeaderLabels(self.wav.vLabels)
+        else:
+            QMessageBox.critical(self, "ERROR", "Not valid a wav file")
+
+
+    def __initEvent(self):
+        self.wavfileDialog.clicked.connect(self.__showFileDialog)
+        self.executeButton.clicked.connect(self.__importWavIntoTable)
 
 
 class TabAnalyseDamping(QWidget):

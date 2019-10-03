@@ -2,12 +2,14 @@ import sys
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 import sip
+import win_unicode_console
 import matplotlib
 import matplotlib.pyplot as plot
 matplotlib.use("Qt5Agg")
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 import numpy as np
 
+win_unicode_console.enable()
 
 class MainWindow(QWidget):
     def __init__(self, parent=None):
