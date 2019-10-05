@@ -1,5 +1,4 @@
 import sys
-import os.path
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 import numpy as np
@@ -7,8 +6,7 @@ import matplotlib
 import matplotlib.pyplot as plot
 matplotlib.use("Qt5Agg")
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
-from src.wavereader import WaveData
-from src.widgets.tabletab import TabAnalyseSpectrum
+
 
 class SpectrogramWidget(QWidget):
     def __init__(self, parent=None):
@@ -42,45 +40,3 @@ class SpectrogramWidget(QWidget):
         self.canvas.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Expanding)
 
         self.setLayout(vbox)
-
-
-
-class TabAnalyseDamping(QWidget):
-    def __init__(self, parent=None):
-        super(TabAnalyseDamping, self).__init__(parent)
-
-
-class MainWindow(QWidget):
-    def __init__(self, parent=None):
-        super(MainWindow, self).__init__(parent)
-
-        self.__initInstances()
-        self.__initLayout()
-        self.__initEvent()
-
-        self.setGeometry(300, 50, 1024, 768)
-        self.setWindowTitle("Damping Analyser")
-
-
-    def __initInstances(self):
-        self.tabs = QTabWidget()
-        self.tabspec = TabAnalyseSpectrum(self)
-        self.tabdamp = TabAnalyseDamping(self)
-        self.tabs.addTab(self.tabspec, "spectrums")
-        self.tabs.addTab(self.tabdamp, "damping")
-
-
-    def __initLayout(self):
-        baselayout = QVBoxLayout(self)
-        baselayout.addWidget(self.tabs)
-        self.setLayout(baselayout)
-
-
-    def __initEvent(self):
-        pass
-
-if __name__ == "__main__":
-    app = QApplication(sys.argv)
-    main_window = MainWindow()
-    main_window.show()
-    sys.exit(app.exec_())
