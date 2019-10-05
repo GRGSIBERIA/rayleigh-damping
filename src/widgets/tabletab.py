@@ -23,6 +23,7 @@ class TabAnalyseSpectrum(QWidget):
         self.frameShiftLabel = QLabel("FFT Frame Shift", self)
         self.frameShiftEdit = QLineEdit("50", self)
         self.executeButton = QPushButton("Show Spectrogram", self)
+        self.saveButton = QPushButton("Save select cell datum into damping", self)
         self.canvas = SpectrogramWidget(self)
         self.table = QTableWidget(self)
     
@@ -51,6 +52,7 @@ class TabAnalyseSpectrum(QWidget):
         tabularFormLayout.addLayout(executeLayout)
 
         tabularFormLayout.addWidget(self.table)
+        tabularFormLayout.addWidget(self.saveButton)
         baselayout.addLayout(tabularFormLayout)
         
         canvasLayout = QVBoxLayout(self)
