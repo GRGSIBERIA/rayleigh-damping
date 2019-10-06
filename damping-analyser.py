@@ -9,6 +9,8 @@ matplotlib.use("Qt5Agg")
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from src.wavereader import WaveData
 from src.widgets.tabletab import TabAnalyseSpectrum
+from src.widgets.tabanalyse import TabAnalyseDamping
+
 
 class SpectrogramWidget(QWidget):
     def __init__(self, parent=None):
@@ -42,12 +44,6 @@ class SpectrogramWidget(QWidget):
         self.canvas.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Expanding)
 
         self.setLayout(vbox)
-
-
-
-class TabAnalyseDamping(QWidget):
-    def __init__(self, parent=None):
-        super(TabAnalyseDamping, self).__init__(parent)
 
 
 class MainWindow(QWidget):
