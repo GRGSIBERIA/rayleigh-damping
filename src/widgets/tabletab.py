@@ -5,6 +5,8 @@ from PyQt5.QtWidgets import *
 import numpy as np
 from src.wavereader import WaveData
 from src.widgets.spectrogram import SpectrogramWidget
+from src.widgets.tabanalyse import TabAnalyseDamping
+
 
 class TabAnalyseSpectrum(QWidget):
     def __init__(self, parent=None):
@@ -23,7 +25,8 @@ class TabAnalyseSpectrum(QWidget):
         self.frameShiftLabel = QLabel("FFT Frame Shift", self)
         self.frameShiftEdit = QLineEdit("50", self)
         self.executeButton = QPushButton("Show Spectrogram", self)
-        self.saveButton = QPushButton("Save select cell datum into damping", self)
+        self.saveLowButton = QPushButton("Save select cell datum into the low frequency", self)
+        self.saveHighButton = QPushButton("Save select cell datum into the high frequency", self)
         self.canvas = SpectrogramWidget(self)
         self.table = QTableWidget(self)
     
@@ -52,7 +55,12 @@ class TabAnalyseSpectrum(QWidget):
         tabularFormLayout.addLayout(executeLayout)
 
         tabularFormLayout.addWidget(self.table)
-        tabularFormLayout.addWidget(self.saveButton)
+
+        saveLayout = QHBoxLayout(self)
+        saveLayout.addWidget(self.saveLowButton)
+        saveLayout.addWidget(self.saveHighButton)
+        tabularFormLayout.addLayout(saveLayout)
+
         baselayout.addLayout(tabularFormLayout)
         
         canvasLayout = QVBoxLayout(self)
@@ -92,3 +100,5 @@ class TabAnalyseSpectrum(QWidget):
     def __initEvent(self):
         self.wavfileDialog.clicked.connect(self.__showFileDialog)
         self.executeButton.clicked.connect(self.__importWavIntoTable)
+        self.saveHighButton.clicked.connect(TabAnalyseDamping.SaveHighFrequencySlot)
+        self.saveLowButton.clicked.connect(TabAnalyseDamping.SaveLowFrequencySlot)
